@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
-  output: 'export', // Включает статический экспорт для GitHub Pages
-  trailingSlash: true, // Добавляет слеш в конец URL
-  basePath: '/todo-list', // Имя вашего репозитория
-  assetPrefix: '/todo-list/', // Для корректной загрузки ресурсов
+  output: 'export',
+  trailingSlash: true,
+  basePath: isProd ? '/todo-list' : '',
+  assetPrefix: isProd ? '/todo-list/' : '',
 };
 
 export default nextConfig;
