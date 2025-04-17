@@ -1,14 +1,6 @@
 import axios from "axios";
 
-const deleteTodos = async (id) => {
-  try {
+export const deleteTodos = async (id) => {
     const response = await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`);
-    console.log("server responded:",response)
-    return response.data; 
-    
-  } catch (error) {
-    throw new Error("delete error: " + error.message);
-  }
-};
-
-export default deleteTodos;
+    return response.data;
+  };

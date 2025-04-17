@@ -1,18 +1,34 @@
+'use client';
+
 import Button from "../Button/Button";
 import Input from "../Input/Input";
-import postTodos from "@/api/postTodos";
-import deleteTodos from "@/api/deleteTodos";
-import { useState } from "react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { postTodos } from "@/api/postTodos";
+import { useState } from 'react';
 
 const TodoForm = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
+  const queryClient = useQueryClient();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); 
-    
+  const addMutation = useMutation({
+    mutationFn: postTodos,
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+      setInputValue('');
+    },
+
+    onError: (error) => {
+      console.error('Error:', error.message);
+      alert('Unable to add task');
+    },
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (inputValue.trim()) {
-      await postTodos({ title: inputValue, completed: false, userId: 1 });
-      setInputValue(""); 
+      addMutation.mutate({ title: inputValue, completed: false, userId: 1 });
     }
   };
 
@@ -23,7 +39,10 @@ const TodoForm = () => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
       />
-      <Button type="submit">Add</Button>
+      
+      <Button type="submit" disabled={addMutation.isPending}>
+        {addMutation.isPending ? 'Adding...' : 'Add'}
+      </Button>
     </form>
   );
 };

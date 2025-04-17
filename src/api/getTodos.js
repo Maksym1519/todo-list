@@ -1,11 +1,6 @@
-const getTodos = async () => {
-    const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10')
-    
-    if (!response.ok) {
-        throw new Error('error')
-    } else {
-        return response.json()
-    }
-}
+import axios from "axios";
 
-export default getTodos;
+export const getTodos = async () => {
+    const response = await axios.get(`${'https://jsonplaceholder.typicode.com/todos?_limit=10'}?_limit=10`);
+    return response.data;
+  };
